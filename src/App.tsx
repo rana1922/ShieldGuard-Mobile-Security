@@ -22,24 +22,35 @@ import {
 } from 'lucide-react';
 import { AndroidDeviceSimulator } from './components/AndroidDeviceSimulator';
 import { DeveloperStudioConsole } from './components/DeveloperStudioConsole';
+import { MobileInstallModal } from './components/MobileInstallModal';
 import { ScanHistoryRecord } from './types/security';
 
 export default function App() {
   const [viewMode, setViewMode] = useState<'split' | 'phone' | 'console'>('split');
   const [globalHistory, setGlobalHistory] = useState<ScanHistoryRecord[]>([]);
+  const [installModalOpen, setInstallModalOpen] = useState(false);
 
   const handleScanHistoryAdd = (rec: ScanHistoryRecord) => {
     setGlobalHistory(prev => [rec, ...prev]);
   };
 
+  const appCurrentUrl = typeof window !== 'undefined' ? window.location.href : 'https://ais-pre-jijqizwtibmkhstceckylj-319163783336.asia-southeast1.run.app';
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       
+      {/* Mobile Install & APK Modal */}
+      <MobileInstallModal
+        isOpen={installModalOpen}
+        onClose={() => setInstallModalOpen(false)}
+        appUrl={appCurrentUrl}
+      />
+
       {/* 
         Top Bar Contract:
         Zone 1: Single text element Brand wordmark
         Zone 2: 4-5 concise single-line nav links
-        Zone 3: 1 primary action (View Mode Switcher)
+        Zone 3: 1 primary action (View Mode Switcher + Install Button)
       */}
       <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-8">
@@ -96,19 +107,25 @@ export default function App() {
             >
               Backend & Test Console
             </button>
-            <a
-              href="https://cybercrime.gov.in"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-cyan-400 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1"
+            <button
+              onClick={() => setInstallModalOpen(true)}
+              className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5"
             >
-              <span>Cyber Helpline 1930</span>
-              <ExternalLink className="w-3 h-3 text-slate-500" />
-            </a>
+              <Smartphone className="w-3.5 h-3.5" />
+              <span>Install on Phone / APK</span>
+            </button>
           </nav>
 
-          {/* Zone 3: 1 primary action (Workspace View Selector) */}
+          {/* Zone 3: 1 primary action (Workspace View Selector + Install button) */}
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setInstallModalOpen(true)}
+              className="px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs rounded-xl shadow-md shadow-cyan-950/40 flex items-center gap-1.5 transition-all active:scale-[0.98]"
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Run on Phone</span>
+            </button>
+
             <div className="p-1 bg-slate-900 border border-slate-800 rounded-xl flex items-center gap-1">
               <button
                 onClick={() => setViewMode('phone')}
@@ -202,7 +219,10 @@ export default function App() {
           {/* Left Pane: Interactive Android Device Simulator */}
           {(viewMode === 'split' || viewMode === 'phone') && (
             <div className={`${viewMode === 'split' ? 'w-full lg:w-[440px] shrink-0' : 'w-full flex justify-center'}`}>
-              <AndroidDeviceSimulator onScanHistoryAdd={handleScanHistoryAdd} />
+              <AndroidDeviceSimulator
+                onScanHistoryAdd={handleScanHistoryAdd}
+                onOpenInstallModal={() => setInstallModalOpen(true)}
+              />
             </div>
           )}
 

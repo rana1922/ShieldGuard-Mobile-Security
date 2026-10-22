@@ -19,6 +19,7 @@ import {
   CheckCircle,
   Copy,
   Upload,
+  Download,
   RefreshCw,
   PhoneCall,
   History,
@@ -47,9 +48,10 @@ import { INITIAL_INSTALLED_APPS } from '../services/appScannerEngine';
 
 interface Props {
   onScanHistoryAdd?: (record: ScanHistoryRecord) => void;
+  onOpenInstallModal?: () => void;
 }
 
-export const AndroidDeviceSimulator: React.FC<Props> = ({ onScanHistoryAdd }) => {
+export const AndroidDeviceSimulator: React.FC<Props> = ({ onScanHistoryAdd, onOpenInstallModal }) => {
   // Navigation inside the Android App
   const [activeTab, setActiveTab] = useState<'dashboard' | 'apps' | 'links' | 'upi' | 'files' | 'audit' | 'reports'>('dashboard');
 
@@ -348,19 +350,32 @@ export const AndroidDeviceSimulator: React.FC<Props> = ({ onScanHistoryAdd }) =>
               </div>
             </div>
 
-            {/* Quick Audit / Info Trigger */}
-            <button
-              onClick={() => setActiveTab(activeTab === 'audit' ? 'dashboard' : 'audit')}
-              className={`p-1.5 rounded-lg border text-xs flex items-center gap-1 transition-colors ${
-                activeTab === 'audit' 
-                  ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300' 
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-              }`}
-              title="Device Security Audit"
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-medium hidden sm:inline">Audit</span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              {onOpenInstallModal && (
+                <button
+                  onClick={onOpenInstallModal}
+                  className="p-1.5 rounded-lg border border-cyan-500/40 bg-cyan-950/40 text-cyan-300 text-xs flex items-center gap-1 hover:bg-cyan-900/50 transition-colors"
+                  title="Install on Real Phone / Download APK"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-medium hidden sm:inline">Install</span>
+                </button>
+              )}
+
+              {/* Quick Audit / Info Trigger */}
+              <button
+                onClick={() => setActiveTab(activeTab === 'audit' ? 'dashboard' : 'audit')}
+                className={`p-1.5 rounded-lg border text-xs flex items-center gap-1 transition-colors ${
+                  activeTab === 'audit' 
+                    ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300' 
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                }`}
+                title="Device Security Audit"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-medium hidden sm:inline">Audit</span>
+              </button>
+            </div>
           </header>
 
           {/* Scrollable Screen Body */}
