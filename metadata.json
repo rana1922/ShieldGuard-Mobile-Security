@@ -1,0 +1,7 @@
+{
+  "name": "ShieldGuard Mobile Security",
+  "description": "Production-oriented Android mobile security application & threat defense suite for malware detection, phishing URL scanning, UPI payment fraud protection, file analysis, and device security auditing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
